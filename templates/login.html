@@ -1,0 +1,74 @@
+{% extends 'auth.html' %}
+{% block title %}
+login
+{% endblock title %}
+<header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+
+        <a href="/" class="scrollto"></a>
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="{% block home %}
+          {% endblock home %}"><a href="/">Home</a></li>
+         
+ <li><a href="/register">Farmer Register</a></li>
+ <li><a href="/addfarming">Add Farming</a></li>
+ <li><a href="/farmerdetails">Farmer Details</a></li>
+ <li><a href="/agroproducts">Agro Products</a></li>
+ <li><a href="/triggers">Records</a></li>
+ 
+       
+    
+ 
+   
+
+    {% if current_user.is_authenticated  %}
+          <li class="buy-tickets"><a href="">Welcome {{current_user.username}}</a></li>
+            <li class="buy-tickets"><a href="/logout">Logout</a></li>
+          {% else %}
+          <li class="buy-tickets"><a href="/signup">Signin</a></li>
+        
+          {% endif %}
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- End Header -->
+{% block content %}
+ <h1 class="mb-4 pb-0"><span>Login Credentials</span> </h1>
+  
+{% with messages=get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+
+<div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+    {{message}}
+
+
+</div>
+
+
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+<form class=" text-white py-3 px-3" action="/login" method="post">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control mb-3" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" required>
+    
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+  </div>
+<br>
+  <button type="submit" class="form-control bg-success text-white">Login</button>
+   <p class="mb-2 pb-0">New User?</p>
+    
+      <a href="/signup" class="about-btn scrollto">Signup</a>
+</form>
+     
+{% endblock content %}
