@@ -9,7 +9,7 @@ from flask_login import login_required,current_user
 # MY db connection
 local_server= True
 app = Flask(__name__)
-app.secret_key='harshithbhaskar'
+app.secret_key='k;lwekmfkljqw2ej'
 
 
 # this is for getting unique user access
@@ -21,7 +21,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # app.config['SQLALCHEMY_DATABASE_URL']='mysql://username:password@localhost/databas_table_name'
-app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:@localhost/farmers'
+app.config['SQLALCHEMY_DATABASE_URI']='mysql://root:csedsatm@localhost/farmers'
 db=SQLAlchemy(app)
 
 # here we will create db models that is tables
