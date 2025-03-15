@@ -9,7 +9,7 @@ from flask_login import login_required,current_user
 # MY db connection
 local_server= True
 app = Flask(__name__)
-app.secret_key='k;lwekmfkljqw2ej'
+app.secret_key='klwekmfkljqw2ej'
 
 
 # this is for getting unique user access
@@ -76,7 +76,7 @@ def index():
 @app.route('/farmerdetails')
 @login_required
 def farmerdetails():
-    # query=db.engine.execute(f"SELECT * FROM `register`") 
+    #query=db.engine.execute(f"SELECT * FROM `register`") 
     query=Register.query.all()
     return render_template('farmerdetails.html',query=query)
 
@@ -122,7 +122,7 @@ def addfarming():
         dep=Farming(farmingtype=farmingtype)
         db.session.add(dep)
         db.session.commit()
-        flash("Farming Addes","success")
+        flash("Farming Added","success")
     return render_template('farming.html')
 
 

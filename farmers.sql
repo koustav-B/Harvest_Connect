@@ -24,7 +24,7 @@ INSERT INTO `addagroproducts` (`username`, `email`, `pid`, `productname`, `produ
 ('test', 'test@gmail.com', 1, 'GIRIJA CAULIFLOWER', ' Tips for Growing Cauliflower. Well drained medium loam and or sandy loam soils are suitable.', 520),
 ('test', 'test@gmail.com', 2, 'COTTON', 'Cotton is a soft, fluffy staple fiber that grows in a boll,around the seeds of the cotton ', 563),
 ('arkpro', 'arkpro@gmail.com', 3, 'silk', 'silk is best business developed from coocon for saries preparation and so on', 582);
-
+select* from addagroproducts;
 -- --------------------------------------------------------
 
 --
@@ -44,7 +44,7 @@ INSERT INTO `farming` (`fid`, `farmingtype`) VALUES
 (1, 'Seed Farming'),
 (2, 'coccon'),
 (3, 'silk');
-
+select* from farming;
 -- --------------------------------------------------------
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE `register` (
   `address` varchar(50) NOT NULL,
   `farming` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+select* from register;
 --
 -- Triggers `register`
 --
@@ -95,7 +95,7 @@ CREATE TABLE `test` (
 
 INSERT INTO `test` (`id`, `name`) VALUES
 (1, 'harshith');
-
+select* from test;
 -- --------------------------------------------------------
 
 --
@@ -119,7 +119,7 @@ INSERT INTO `trig` (`id`, `fid`, `action`, `timestamp`) VALUES
 (3, '8', 'Farmer Inserted', '2021-01-19 23:16:52'),
 (4, '8', 'FARMER UPDATED', '2021-01-19 23:17:17'),
 (5, '8', 'FARMER DELETED', '2021-01-19 23:18:54');
-
+select* from trig;
 -- --------------------------------------------------------
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `user` (
   `email` varchar(50) NOT NULL,
   `password` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
+select* from user;
 --
 -- Dumping data for table `user`
 --
