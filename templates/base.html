@@ -117,3 +117,186 @@
 </body>
 
 </html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farming Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: green;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        #chat-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+        }
+
+        #chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #user-input {
+            width: 80%;
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .input-container {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 5px;
+      }
+  
+      #user-input {
+          width: 85%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+      }
+  
+      #send-btn {
+          padding: 8px 12px;
+          background: green;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 18px;
+      }
+  
+      #send-btn:hover {
+          background: darkgreen;
+      }
+    </style>
+</head>
+<body>
+    <div id="chat-icon" onclick="toggleChat()">💬</div>
+
+    <div id="chat-container">
+      <div id="chat-box"></div>
+      <div class="input-container">
+          <input type="text" id="user-input" placeholder="Ask about farming..." onkeypress="handleKeyPress(event)">
+          <button onclick="sendMessage()" id="send-btn">➤</button>
+      </div>
+
+    <script>
+        function toggleChat() {
+            let chatContainer = document.getElementById("chat-container");
+            chatContainer.style.display = chatContainer.style.display === "none" || chatContainer.style.display === "" ? "flex" : "none";
+        }
+        const responses = {
+          "best crops for summer": "Corn, tomatoes, cucumbers, and peppers grow well in summer.",
+          "best crops for winter": "Carrots, kale, spinach, and garlic thrive in winter.",
+          "how to improve soil fertility": "Use organic compost, crop rotation, and cover crops to enhance soil fertility.",
+          "pest control methods": "Try natural pesticides, companion planting, and biological pest control methods.",
+          "best irrigation methods": "Drip irrigation and sprinkler systems are efficient for water conservation.",
+          "how to prevent soil erosion": "Use contour plowing, terracing, and cover crops to prevent soil erosion.",
+          "how to store harvested crops": "Store crops in a cool, dry place with proper ventilation to prevent spoilage.",
+          "organic farming benefits": "Organic farming improves soil health, reduces chemical use, and enhances biodiversity.",
+          "how to grow tomatoes": "Plant in well-drained soil, provide full sun, and water regularly.",
+          "best fertilizer for wheat": "Use nitrogen-rich fertilizers like urea or ammonium nitrate.",
+          "how to start beekeeping": "Get a hive, protective gear, and start with a bee colony in a safe location.",
+          "how to control weeds": "Use mulching, crop rotation, and manual removal to control weeds.",
+          "best livestock for small farms": "Chickens, goats, and rabbits are great for small farms.",
+          "hydroponic farming advantages": "Saves water, requires less space, and allows year-round cultivation.",
+          "how to detect plant diseases": "Look for leaf discoloration, spots, wilting, or stunted growth.",
+          "how to grow potatoes": "Plant in loose soil, cover with mulch, and water moderately.",
+          "benefits of crop rotation": "Prevents soil depletion, reduces pests, and improves yields.",
+          "how to harvest rice": "Cut the stalks, dry them, and thresh to separate grains.",
+          "best time to plant corn": "Plant in spring when soil temperature is above 50°F (10°C).",
+          "how to conserve water in farming": "Use drip irrigation, rainwater harvesting, and drought-resistant crops.",
+          "Who made the website ?": "Koustav Biswas and Team",
+          "Hi":"Hello"
+      };
+     // ✅ Function to dynamically add responses
+function addResponse(question, answer) {
+  responses[question.toLowerCase().trim()] = answer;
+}
+
+// ✅ Detect Enter key press to send messages
+function handleKeyPress(event) {
+  if (event.key === "Enter") {
+      sendMessage();
+  }
+}
+
+function sendMessage() {
+  let inputField = document.getElementById("user-input");
+  let input = inputField.value.trim().toLowerCase();
+  let chatBox = document.getElementById("chat-box");
+
+  if (input === "") return;
+
+  chatBox.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+
+  // ✅ Show typing indicator
+  let typingIndicator = document.createElement("p");
+  typingIndicator.id = "typing";
+  typingIndicator.innerHTML = `<strong>Bot:</strong> <em>typing...</em>`;
+  chatBox.appendChild(typingIndicator);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  inputField.value = "";
+
+  setTimeout(() => {
+      document.getElementById("typing").remove();
+
+      // ✅ Exact match lookup for responses
+      let reply = responses[input] || "Sorry, I don't have information on that. Try another question!";
+      
+      chatBox.innerHTML += `<p><strong>Bot:</strong> ${reply}</p>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+  }, 1500);
+}
+
+// ✅ Example: Add new responses dynamically
+addResponse("how to grow carrots", "Plant in loose soil, provide sunlight, and water regularly.");
+addResponse("best irrigation method", "Drip irrigation is the best for water conservation.");
+    </script>
+</body>
+</html>
