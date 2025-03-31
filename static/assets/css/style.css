@@ -42,7 +42,7 @@ h6 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    :root {
+     :root {
         scroll-behavior: auto;
     }
 }
@@ -685,7 +685,6 @@ body.mobile-nav-active #mobile-nav-toggle {
         transform: scale(0.6, 0.6);
         opacity: 1;
     }
-
     100% {
         transform: scale(1, 1);
         opacity: 0;
@@ -697,7 +696,6 @@ body.mobile-nav-active #mobile-nav-toggle {
         transform: scale(0.6, 0.6);
         opacity: 1;
     }
-
     100% {
         transform: scale(1, 1);
         opacity: 0;
@@ -1234,7 +1232,6 @@ body.mobile-nav-active #mobile-nav-toggle {
     #faq #faq-list a {
         font-size: 18px;
     }
-
     #faq #faq-list i {
         top: 13px;
     }
@@ -1452,7 +1449,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 @media (min-width: 768px) {
-
     #contact .contact-address,
     #contact .contact-phone,
     #contact .contact-email {
@@ -1555,7 +1551,6 @@ body.mobile-nav-active #mobile-nav-toggle {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
@@ -1565,7 +1560,6 @@ body.mobile-nav-active #mobile-nav-toggle {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
@@ -1720,10 +1714,10 @@ body.mobile-nav-active #mobile-nav-toggle {
     align-items: center;
     justify-content: center;
     padding-bottom: 1rem;
-    background: linear-gradient( rgb(19, 170, 82) 0%, rgb(19 142 170) 90% );
+    background: linear-gradient( rgb(19, 170, 82) 0%, rgb(19 142 170) 90%);
     /* background: linear-gradient( rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90% ); */
     /* background: linear-gradient(rgb(122 184 86), rgb(43 135 184)); */
-    .created-heading{
+    .created-heading {
         margin: 1.1rem 0 1rem 0;
     }
 }
@@ -1733,7 +1727,6 @@ body.mobile-nav-active #mobile-nav-toggle {
     align-items: center;
     justify-content: center;
     gap: 2.5rem;
-
     .cards {
         display: flex;
         flex-direction: column;
@@ -1742,18 +1735,17 @@ body.mobile-nav-active #mobile-nav-toggle {
         background-color: rgba(0, 0, 0, 0.4);
         padding: 5px;
         border-radius: 15px;
-
         img {
             width: 14vw;
             border-radius: 15px;
         }
-        span{
+        span {
             font-size: 1.3vw;
         }
     }
 }
 
-.footer-cmn{
+.footer-cmn {
     margin: 0.5rem 0 0.5rem 0;
     text-align: center;
 }

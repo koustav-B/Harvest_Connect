@@ -13,6 +13,7 @@
 {% block style %}
 {% endblock style %}
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +25,221 @@
   <!-- Template Main CSS File -->
   <link href="static/assets/css/style.css" rel="stylesheet">
 
- 
+  <!-- Chatbot Styles -->
+  <style>
+    #chat-icon {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #chat-icon:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #chat-container {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 350px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      transition: all 0.3s ease;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #chat-box {
+      height: 350px;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      scrollbar-width: thin;
+    }
+
+    #chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat-box::-webkit-scrollbar-thumb {
+      background-color: #ced4da;
+      border-radius: 3px;
+    }
+
+    .user-message {
+      background-color: #e9f0ff;
+      padding: 10px 15px;
+      border-radius: 18px 18px 0 18px;
+      margin-bottom: 12px;
+      max-width: 80%;
+      align-self: flex-end;
+      margin-left: auto;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .bot-message {
+      background-color: white;
+      padding: 10px 15px;
+      border-radius: 18px 18px 18px 0;
+      margin-bottom: 12px;
+      max-width: 80%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background: white;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      border-radius: 24px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    #user-input:focus {
+      outline: none;
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    #send-btn {
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    #send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      background-color: white;
+      border-radius: 18px 18px 18px 0;
+      margin-bottom: 12px;
+      max-width: 80px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .typing-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ced4da;
+      margin: 0 3px;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0% { transform: translateY(0); background-color: #ced4da; }
+      25% { transform: translateY(-5px); background-color: #0d6efd; }
+      50% { transform: translateY(0); background-color: #ced4da; }
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .bot-avatar {
+      background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+    }
+
+    .user-avatar {
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    }
+
+    .message-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .suggestion-chip {
+      background-color: #e9ecef;
+      color: #495057;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+      background-color: #dee2e6;
+    }
+  </style>
 </head>
 
 <body>
@@ -97,6 +312,29 @@
   {% endblock body %}
 
 
+  <!-- Chatbot -->
+  <div id="chat-icon" onclick="toggleChat()">
+    <i class="fas fa-comment-dots"></i>
+  </div>
+
+  <div id="chat-container">
+    <div class="chat-header">
+      <div>
+        <i class="fas fa-robot mr-2"></i> Farming Assistant
+      </div>
+      <div style="cursor: pointer;" onclick="toggleChat()">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div id="chat-box"></div>
+    <div class="input-container">
+      <input type="text" id="user-input" placeholder="Ask about farming..." onkeypress="handleKeyPress(event)">
+      <button id="send-btn" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
 
   <!-- Vendor JS Files -->
@@ -114,249 +352,288 @@
   <!-- Template Main JS File -->
   <script src="static/assets/js/main.js"></script>
 
-</body>
+  <!-- Chatbot Script -->
+  <script>
+    // Initialize chatbot
+    let isChatOpen = false;
+    let hasUserInteracted = false;
+    const suggestionTopics = [
+      "best crops for summer", 
+      "how to improve soil fertility", 
+      "organic farming benefits", 
+      "best irrigation methods",
+      "how to control weeds"
+    ];
 
-</html>
+    // Responses database
+    const responses = {
+      "best crops for summer": "Corn, tomatoes, cucumbers, and peppers grow well in summer.",
+      "best crops for winter": "Carrots, kale, spinach, and garlic thrive in winter.",
+      "how to improve soil fertility": "Use organic compost, crop rotation, and cover crops to enhance soil fertility.",
+      "pest control methods": "Try natural pesticides, companion planting, and biological pest control methods.",
+      "best irrigation methods": "Drip irrigation and sprinkler systems are efficient for water conservation.",
+      "how to prevent soil erosion": "Use contour plowing, terracing, and cover crops to prevent soil erosion.",
+      "how to store harvested crops": "Store crops in a cool, dry place with proper ventilation to prevent spoilage.",
+      "organic farming benefits": "Organic farming improves soil health, reduces chemical use, and enhances biodiversity.",
+      "how to grow tomatoes": "Plant in well-drained soil, provide full sun, and water regularly.",
+      "best fertilizer for wheat": "Use nitrogen-rich fertilizers like urea or ammonium nitrate.",
+      "how to start beekeeping": "Get a hive, protective gear, and start with a bee colony in a safe location.",
+      "how to control weeds": "Use mulching, crop rotation, and manual removal to control weeds.",
+      "best livestock for small farms": "Chickens, goats, and rabbits are great for small farms.",
+      "hydroponic farming advantages": "Saves water, requires less space, and allows year-round cultivation.",
+      "how to detect plant diseases": "Look for leaf discoloration, spots, wilting, or stunted growth.",
+      "how to grow potatoes": "Plant in loose soil, cover with mulch, and water moderately.",
+      "benefits of crop rotation": "Prevents soil depletion, reduces pests, and improves yields.",
+      "how to harvest rice": "Cut the stalks, dry them, and thresh to separate grains.",
+      "best time to plant corn": "Plant in spring when soil temperature is above 50°F (10°C).",
+      "how to conserve water in farming": "Use drip irrigation, rainwater harvesting, and drought-resistant crops.",
+      "Who made the website ?": "Koustav Biswas and Team",
+      "Hi": "Hello! 👋 How can I help with your farming questions today?",
+      "hello": "Hi there! 👋 I'm your farming assistant. What farming information do you need?"
+    };
 
+    // Add contextual suggestions
+    function addSuggestions(message) {
+      const suggestions = [];
 
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farming Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        #chat-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: green;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 24px;
-            box-shadow: 0px 0px 10px gray;
-        }
-
-        #chat-container {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 300px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
-            padding: 10px;
-            display: none;
-            flex-direction: column;
-        }
-
-        #chat-box {
-            height: 300px;
-            overflow-y: auto;
-            border-bottom: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        #user-input {
-            width: 80%;
-            padding: 5px;
-        }
-
-        button {
-            padding: 5px 10px;
-            background: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .input-container {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 5px;
+      if (message.toLowerCase().includes("soil")) {
+        suggestions.push("how to improve soil fertility", "how to prevent soil erosion");
       }
-  
-      #user-input {
-          width: 85%;
-          padding: 8px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
+      else if (message.toLowerCase().includes("water") || message.toLowerCase().includes("irrigation")) {
+        suggestions.push("best irrigation methods", "how to conserve water in farming");
       }
-  
-      #send-btn {
-          padding: 8px 12px;
-          background: green;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 18px;
+      else if (message.toLowerCase().includes("plant") || message.toLowerCase().includes("crop")) {
+        suggestions.push("best crops for summer", "how to grow tomatoes", "how to grow potatoes");
       }
-  
-      #send-btn:hover {
-          background: darkgreen;
+      else if (message.toLowerCase().includes("pest") || message.toLowerCase().includes("disease")) {
+        suggestions.push("pest control methods", "how to detect plant diseases");
       }
-    </style>
-</head>
-<body>
-    <div id="chat-icon" onclick="toggleChat()">💬</div>
 
-    <div id="chat-container">
-      <div id="chat-box"></div>
-      <div class="input-container">
-          <input type="text" id="user-input" placeholder="Ask about farming..." onkeypress="handleKeyPress(event)">
-          <button onclick="sendMessage()" id="send-btn">➤</button>
-      </div>
+      if (suggestions.length === 0 && !hasUserInteracted) {
+        return suggestionTopics;
+      }
 
-    <script>
-        function toggleChat() {
-            let chatContainer = document.getElementById("chat-container");
-            chatContainer.style.display = chatContainer.style.display === "none" || chatContainer.style.display === "" ? "flex" : "none";
-        }
-        const responses = {
-          "best crops for summer": "Corn, tomatoes, cucumbers, and peppers grow well in summer.",
-          "best crops for winter": "Carrots, kale, spinach, and garlic thrive in winter.",
-          "how to improve soil fertility": "Use organic compost, crop rotation, and cover crops to enhance soil fertility.",
-          "pest control methods": "Try natural pesticides, companion planting, and biological pest control methods.",
-          "best irrigation methods": "Drip irrigation and sprinkler systems are efficient for water conservation.",
-          "how to prevent soil erosion": "Use contour plowing, terracing, and cover crops to prevent soil erosion.",
-          "how to store harvested crops": "Store crops in a cool, dry place with proper ventilation to prevent spoilage.",
-          "organic farming benefits": "Organic farming improves soil health, reduces chemical use, and enhances biodiversity.",
-          "how to grow tomatoes": "Plant in well-drained soil, provide full sun, and water regularly.",
-          "best fertilizer for wheat": "Use nitrogen-rich fertilizers like urea or ammonium nitrate.",
-          "how to start beekeeping": "Get a hive, protective gear, and start with a bee colony in a safe location.",
-          "how to control weeds": "Use mulching, crop rotation, and manual removal to control weeds.",
-          "best livestock for small farms": "Chickens, goats, and rabbits are great for small farms.",
-          "hydroponic farming advantages": "Saves water, requires less space, and allows year-round cultivation.",
-          "how to detect plant diseases": "Look for leaf discoloration, spots, wilting, or stunted growth.",
-          "how to grow potatoes": "Plant in loose soil, cover with mulch, and water moderately.",
-          "benefits of crop rotation": "Prevents soil depletion, reduces pests, and improves yields.",
-          "how to harvest rice": "Cut the stalks, dry them, and thresh to separate grains.",
-          "best time to plant corn": "Plant in spring when soil temperature is above 50°F (10°C).",
-          "how to conserve water in farming": "Use drip irrigation, rainwater harvesting, and drought-resistant crops.",
-          "Who made the website ?": "Koustav Biswas and Team",
-          "Hi":"Hello"
-      };
-     // ✅ Function to dynamically add responses
-function addResponse(question, answer) {
-  responses[question.toLowerCase().trim()] = answer;
-}
+      return suggestions;
+    }
 
-// ✅ Detect Enter key press to send messages
-function handleKeyPress(event) {
-  if (event.key === "Enter") {
-      sendMessage();
-  }
-}
-
-function sendMessage() {
-  let inputField = document.getElementById("user-input");
-  let input = inputField.value.trim().toLowerCase();
-  let chatBox = document.getElementById("chat-box");
-
-  if (input === "") return;
-
-  chatBox.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
-
-  // ✅ Show typing indicator
-  let typingIndicator = document.createElement("p");
-  typingIndicator.id = "typing";
-  typingIndicator.innerHTML = `<strong>Bot:</strong> <em>typing...</em>`;
-  chatBox.appendChild(typingIndicator);
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  inputField.value = "";
-
-  setTimeout(() => {
-      document.getElementById("typing").remove();
-
-      // ✅ Exact match lookup for responses
-      let reply = responses[input] || "Sorry, I don't have information on that. Try another question!";
+    // Function to display suggestions
+    function displaySuggestions(suggestions) {
+      if (suggestions.length === 0) return '';
       
-      chatBox.innerHTML += `<p><strong>Bot:</strong> ${reply}</p>`;
-      chatBox.scrollTop = chatBox.scrollHeight;
-  }, 1500);
-}
+      let html = '<div class="suggestions">';
+      suggestions.forEach(suggestion => {
+        html += `<div class="suggestion-chip" onclick="useSuggestion('${suggestion}')">${suggestion}</div>`;
+      });
+      html += '</div>';
+      return html;
+    }
 
-// ✅ Example: Add new responses dynamically
-addResponse("how to grow carrots", "Plant in loose soil, provide sunlight, and water regularly.");
-addResponse("best irrigation method", "Drip irrigation is the best for water conservation.");
-addResponse("hi", "Hello there! 🌱");
-addResponse("hello", "Hey! How's your farming going? 🚜");
-addResponse("hey", "Hey hey! Need some farming tips? 🌾");
-addResponse("yo", "Yo! Ready to grow some crops? 🌽");
-addResponse("good morning", "Good morning! Time to water the plants! ☀️");
-addResponse("good afternoon", "Good afternoon! How's your farm today? 🌿");
-addResponse("good evening", "Good evening! Hope you had a productive day! 🌙");
-addResponse("what's up", "Not much, just helping farmers like you! 🌾");
-addResponse("howdy", "Howdy, farmer! 🤠");
-addResponse("hi bot", "Hello, human! How can I help? 🤖");
-addResponse("hello chatbot", "Hey! Ask me anything about farming! 🌽");
-addResponse("hey there", "Hey there! Need any farming advice? 🚜");
-addResponse("sup", "Not much, just growing some virtual crops! 🌱");
-addResponse("greetings", "Greetings, fellow farmer! 🌾");
-addResponse("bonjour", "Bonjour! Farming is universal! 🇫🇷");
-addResponse("hola", "Hola! Let’s grow something amazing!");
-addResponse("namaste", "Namaste! How can I assist you today? 🙏");
-addResponse("yo bot", "Yo! What’s growing on? 🌻");
-addResponse("hi there", "Hi! Let’s talk about plants! 🌿");
-addResponse("hello friend", "Hello, my farming friend! 🌱");
-addResponse("how to start organic farming", "Start with composting, avoid chemical pesticides, and rotate crops.");
-addResponse("best crops for sandy soil", "Carrots, peanuts, radishes, and watermelon grow well in sandy soil.");
-addResponse("how to increase milk production in cows", "Provide nutritious feed, ensure regular health checkups, and maintain a stress-free environment.");
-addResponse("how to make compost at home", "Use kitchen scraps, dry leaves, and garden waste in a compost bin and keep it aerated.");
-addResponse("best season to plant onions", "Onions grow best when planted in late fall or early spring.");
-addResponse("how to control fungal diseases in plants", "Use neem oil, maintain proper spacing, and avoid overwatering.");
-addResponse("how to start poultry farming", "Choose a suitable breed, set up a coop, and ensure proper feeding and vaccination.");
-addResponse("best crops for hilly regions", "Tea, coffee, apples, and millets grow well in hilly areas.");
-addResponse("how to improve soil drainage", "Add organic matter, use raised beds, and avoid compacting the soil.");
-addResponse("how to grow bananas", "Plant in well-drained soil, provide full sun, and water frequently.");
-addResponse("how to keep farm animals healthy", "Provide clean water, proper nutrition, and routine veterinary care.");
-addResponse("best way to store wheat grains", "Store in airtight containers in a cool, dry place to prevent pests.");
-addResponse("how to start fish farming", "Select a pond, choose a suitable fish breed, and maintain water quality.");
-addResponse("how to reduce pesticide use", "Use natural predators, organic pesticides, and crop rotation.");
-addResponse("how to protect crops from frost", "Use row covers, mulch, and plant cold-resistant varieties.");
-addResponse("best way to grow cucumbers", "Provide a trellis, ensure regular watering, and plant in warm soil.");
-addResponse("how to attract pollinators to a farm", "Plant flowers, avoid pesticides, and provide water sources.");
-addResponse("how to grow strawberries", "Plant in well-drained soil, ensure full sun, and use mulch.");
-addResponse("how to start mushroom farming", "Use a dark, humid environment and select a suitable mushroom variety.");
-addResponse("how to make natural fertilizers", "Use compost, manure, and banana peels to enrich soil nutrients.");
-addResponse("Can I grow pizza on a tree?", "Unfortunately, no. But you can grow tomatoes, wheat, and basil to make one!");
-addResponse("Do plants have feelings?", "Not in the way humans do, but they do respond to their environment!");
-addResponse("Can I talk to my plants?", "Sure! Some say it helps them grow, but science is still debating that.");
-addResponse("Is soil just dirt?", "Nope! Soil is full of nutrients and life, making it essential for plants.");
-addResponse("Can I plant money to grow a money tree?", "If only! But you can grow plants that can be sold for money.");
-addResponse("Do cows really have best friends?", "Yes! Studies show cows form close friendships.");
-addResponse("Why do farmers wake up so early?", "Because crops and animals don’t wait for anyone!");
-addResponse("Can I grow a coconut tree in my bedroom?", "Probably not. Coconut trees need lots of space and sunshine.");
-addResponse("Do plants sleep at night?", "Sort of! They slow down and process nutrients differently at night.");
-addResponse("Can I grow potatoes in space?", "NASA has actually tested growing potatoes on Mars-like soil!");
-addResponse("Will singing to my plants help them grow?", "It might! Some studies suggest sound vibrations affect plant growth.");
-addResponse("Can I grow a watermelon inside a watermelon?", "Nope, but that would be cool!");
-addResponse("Why is my plant dying even though I love it?", "Love is great, but your plant also needs water, sunlight, and nutrients!");
-addResponse("Is rainwater better than tap water for plants?", "Yes! Rainwater is naturally soft and free of chemicals.");
-addResponse("Can I grow popcorn?", "Yes! But you need to grow popcorn maize, not regular sweet corn.");
-addResponse("Do plants get sunburned?", "Yes! Too much sunlight can scorch their leaves.");
-addResponse("Can I grow a tree from a pencil?", "Only if it’s a special seed pencil designed to grow into a plant!");
-addResponse("Do farmers have secret crop-growing techniques?", "No real secrets, just experience, science, and a lot of hard work!");
-addResponse("Can I farm in my bathtub?", "Unless you’re growing aquatic plants, that might not be the best idea!");
-addResponse("Is cow dung really good for plants?", "Yes! It’s an excellent natural fertilizer.");
-</script>
+    // Use a suggestion
+    function useSuggestion(suggestion) {
+      document.getElementById('user-input').value = suggestion;
+      sendMessage();
+    }
+
+    // Toggle chat window
+    function toggleChat() {
+      const chatContainer = document.getElementById("chat-container");
+      isChatOpen = !isChatOpen;
+      
+      if (isChatOpen) {
+        chatContainer.style.display = "flex";
+        setTimeout(() => {
+          chatContainer.style.opacity = "1";
+          chatContainer.style.transform = "scale(1)";
+          
+          // If first time opening, show welcome message
+          if (!hasUserInteracted) {
+            setTimeout(() => {
+              addBotMessage("Hi there! 👋 I'm your farming assistant. How can I help you today?");
+              
+              // Add initial suggestions
+              const suggestionsHtml = displaySuggestions(suggestionTopics);
+              document.querySelector('#chat-box .bot-message:last-child').innerHTML += suggestionsHtml;
+              
+              scrollToBottom();
+            }, 500);
+          }
+        }, 50);
+      } else {
+        chatContainer.style.opacity = "0";
+        chatContainer.style.transform = "scale(0.9)";
+        setTimeout(() => {
+          chatContainer.style.display = "none";
+        }, 300);
+      }
+    }
+
+    // Add dynamic response
+    function addResponse(question, answer) {
+      responses[question.toLowerCase().trim()] = answer;
+    }
+
+    // Detect Enter key press to send messages
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    }
+
+    // Send message
+    function sendMessage() {
+      let inputField = document.getElementById("user-input");
+      let input = inputField.value.trim();
+      
+      if (input === "") return;
+      
+      addUserMessage(input);
+      inputField.value = "";
+      hasUserInteracted = true;
+      
+      // Show typing indicator
+      showTypingIndicator();
+      
+      // Process and respond after a delay
+      setTimeout(() => {
+        hideTypingIndicator();
+        
+        let response = getResponse(input);
+        addBotMessage(response);
+        
+        // Add suggestions based on the conversation
+        const suggestions = addSuggestions(input);
+        if (suggestions.length > 0) {
+          const suggestionsHtml = displaySuggestions(suggestions);
+          document.querySelector('#chat-box .bot-message:last-child').innerHTML += suggestionsHtml;
+        }
+        
+        scrollToBottom();
+      }, 1000 + Math.random() * 1000); // Random delay between 1-2s for more natural feel
+    }
+
+    // Add user message to chat
+    function addUserMessage(message) {
+      const chatBox = document.getElementById("chat-box");
+      const messageHtml = `
+        <div class="message-row" style="justify-content: flex-end">
+          <div class="user-message">${escapeHtml(message)}</div>
+          <div class="avatar user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      `;
+      chatBox.innerHTML += messageHtml;
+      scrollToBottom();
+    }
+
+    // Add bot message to chat
+    function addBotMessage(message) {
+      const chatBox = document.getElementById("chat-box");
+      const messageHtml = `
+        <div class="message-row">
+          <div class="avatar bot-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="bot-message">${message}</div>
+        </div>
+      `;
+      chatBox.innerHTML += messageHtml;
+      scrollToBottom();
+    }
+
+    // Show typing indicator
+    function showTypingIndicator() {
+      const chatBox = document.getElementById("chat-box");
+      const indicatorHtml = `
+        <div class="message-row typing-indicator-row">
+          <div class="avatar bot-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="typing-indicator">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+      `;
+      chatBox.innerHTML += indicatorHtml;
+      scrollToBottom();
+    }
+
+    // Hide typing indicator
+    function hideTypingIndicator() {
+      const indicator = document.querySelector('.typing-indicator-row');
+      if (indicator) {
+        indicator.remove();
+      }
+    }
+
+    // Get appropriate response based on input
+    function getResponse(input) {
+      const lowerInput = input.toLowerCase().trim();
+      
+      // Direct match
+      if (responses[lowerInput]) {
+        return responses[lowerInput];
+      }
+      
+      // Partial match
+      for (const key in responses) {
+        if (lowerInput.includes(key)) {
+          return responses[key];
+        }
+      }
+      
+      // Keyword matching
+      if (lowerInput.includes("crop")) {
+        return "There are various crops suitable for different seasons and soils. Could you be more specific about what crop information you need?";
+      }
+      if (lowerInput.includes("soil")) {
+        return "Healthy soil is the foundation of farming. Regular testing and organic matter addition can improve soil quality.";
+      }
+      if (lowerInput.includes("water") || lowerInput.includes("irrigation")) {
+        return "Water management is crucial for farming. Drip irrigation is one of the most efficient methods to conserve water.";
+      }
+      
+      // Default response
+      return "I don't have specific information on that. Try asking about crops, soil, irrigation, or pest control for farming advice.";
+    }
+
+    // Helper to escape HTML
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Scroll chat to bottom
+    function scrollToBottom() {
+      const chatBox = document.getElementById("chat-box");
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    // Add more responses
+    addResponse("how to grow carrots", "Plant carrot seeds in loose, well-drained soil about 1/4 inch deep. Keep soil moist but not waterlogged. Thin seedlings to 2 inches apart when they reach 2 inches tall. Harvest when the tops of the carrots are about 3/4 inch in diameter.");
+    addResponse("best irrigation method", "Drip irrigation is the most efficient method, delivering water directly to plant roots while minimizing evaporation. It can save up to 60% of water compared to traditional methods.");
+    
+    // Add greetings
+    addResponse("good morning", "Good morning! Perfect time to check on your crops while the dew is still fresh! ☀️");
+    addResponse("good afternoon", "Good afternoon! How's your farm doing today? 🌿");
+    addResponse("good evening", "Good evening! Hope you had a productive day in the fields! 🌙");
+    addResponse("thanks", "You're welcome! Happy farming! 🌱");
+    addResponse("thank you", "You're welcome! Let me know if you need any other farming advice. 🌾");
+    
+    // Initialize chat container
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatContainer = document.getElementById("chat-container");
+      chatContainer.style.opacity = "0";
+      chatContainer.style.transform = "scale(0.9)";
+      chatContainer.style.transition = "all 0.3s ease";
+    });
+  </script>
 </body>
+
 </html>

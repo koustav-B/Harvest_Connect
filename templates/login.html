@@ -38,37 +38,50 @@ login
     </div>
   </header><!-- End Header -->
 {% block content %}
- <h1 class="mb-4 pb-0"><span>Login Credentials</span> </h1>
-  
-{% with messages=get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-success text-white text-center py-3">
+          <h3 class="mb-0">Login to Harvest Connect</h3>
+        </div>
+        <div class="card-body p-4">
+          {% with messages=get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
 
-<div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-    {{message}}
-
-
+          <form action="/login" method="post">
+            <div class="form-group mb-3">
+              <label for="exampleInputEmail1" class="form-label fw-bold">Email address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter your email" aria-describedby="emailHelp" required>
+              </div>
+            </div>
+            <div class="form-group mb-4">
+              <label for="exampleInputPassword1" class="form-label fw-bold">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Enter your password" required>
+              </div>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-lg">Login</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer bg-light text-center py-3">
+          <p class="mb-0">New User? <a href="/signup" class="text-success fw-bold">Sign Up</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-<form class=" text-white py-3 px-3" action="/login" method="post">
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control mb-3" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" required>
-    
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
-  </div>
-<br>
-  <button type="submit" class="form-control bg-success text-white">Login</button>
-   <p class="mb-2 pb-0">New User?</p>
-    
-      <a href="/signup" class="about-btn scrollto">Signup</a>
-</form>
-     
 {% endblock content %}

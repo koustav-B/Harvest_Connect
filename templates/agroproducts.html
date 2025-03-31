@@ -3,50 +3,559 @@
 Agro Products
 {% endblock title %}
 
-
-
 {% block body %}
- <h3 class="text-center"><span>Agro Products</span> </h3>
+<div class="container-fluid py-5 bg-white">
+  <!-- Hero Section with Animated Background -->
+  <div class="row mb-5">
+    <div class="col-12 text-center hero-section p-5 rounded-3 mb-4">
+      <h1 class="display-4 fw-bolder text-white mb-3 text-shadow">
+        <i class="fas fa-tint me-2 fa-bounce"></i>Harvest <span class="text-light">Marketplace</span>
+      </h1>
+      <div class="d-flex justify-content-center">
+        <div class="divider bg-white" style="height: 5px; width: 100px; margin-bottom: 25px;"></div>
+      </div>
+      <p class="lead fw-bold text-white">Discover fresh, locally-grown agricultural products from our farmers</p>
+    </div>
+  </div>
   
-{% with messages=get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-
-<div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-    {{message}}
-
-
-</div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-<br>
-
-<div class="container mt-3">
-<div class="row">
-
-  {% for p in query %}
-  <div class="col-sm-4">
-    <div class="card">
-      <div class="card-body">
-        <b><h5 class="card-title">{{p.productname}}</h5></b>
-        <b>Price : {{p.price}}</b>
-        <hr>
-        <p class="card-text">{{p.productdesc}}</p>
-        
- 
-        <p>Owner : {{p.username}}</p>
-        <p>Email : {{p.email}}</p>
-      
-
-        
-        <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to={{p.email}}" target="_blank" class="btn btn-success ">Purchase</a>
+  <!-- Stats Bar (ENHANCED SIZE) -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-10">
+      <div class="card border-0 shadow-lg gradient-border stats-card">
+        <div class="card-body p-md-5 py-5">
+          <div class="row text-center">
+            <div class="col-md-4 border-end border-light">
+              <div class="stat-item p-4">
+                <i class="fas fa-users fa-3x mb-3 fa-pulse stat-icon"></i>
+                <h2 class="display-3 fw-bolder mb-2 stat-number">100+</h2>
+                <p class="fs-4 fw-bold mb-0 text-uppercase text-dark">Farmers</p>
+              </div>
+            </div>
+            <div class="col-md-4 border-end border-light">
+              <div class="stat-item p-4">
+                <i class="fas fa-seedling fa-3x mb-3 fa-beat stat-icon"></i>
+                <h2 class="display-3 fw-bolder mb-2 stat-number">500+</h2>
+                <p class="fs-4 fw-bold mb-0 text-uppercase text-dark">Products</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-item p-4">
+                <i class="fas fa-truck fa-3x mb-3 fa-flip stat-icon"></i>
+                <h2 class="display-3 fw-bolder mb-2 stat-number">1000+</h2>
+                <p class="fs-4 fw-bold mb-0 text-uppercase text-dark">Deliveries</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  {% endfor %}
-</div>
   
-
+  <!-- Flash Messages -->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{category}} alert-dismissible fade show shadow-sm fw-bold glass-effect" role="alert">
+        <i class="fas fa-info-circle me-2 fa-beat-fade"></i>{{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+  
+  <!-- Search and Filter Section -->
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-lg glass-card">
+        <div class="card-body p-4">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-primary text-white fw-bold">
+              <i class="fas fa-search fa-beat-fade"></i>
+            </span>
+            <input type="text" class="form-control fw-bold" id="product-search" placeholder="Search products...">
+            <button class="btn btn-primary fw-bold pulse-button" type="button">
+              <i class="fas fa-filter me-2"></i>Filter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Category Pills -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <div class="d-flex justify-content-center flex-wrap gap-2">
+        <button class="btn btn-outline-primary rounded-pill fw-bold category-pill active">All</button>
+        <button class="btn btn-outline-primary rounded-pill fw-bold category-pill">Vegetables</button>
+        <button class="btn btn-outline-primary rounded-pill fw-bold category-pill">Fruits</button>
+        <button class="btn btn-outline-primary rounded-pill fw-bold category-pill">Grains</button>
+        <button class="btn btn-outline-primary rounded-pill fw-bold category-pill">Dairy</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Products Section -->
+  <div class="row">
+    {% for p in query %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card product-card h-100 border-0 shadow-lg hover-effect">
+        <div class="ribbon-wrapper" style="visibility: {% if p.price < 100 %}visible{% else %}hidden{% endif %}">
+          <div class="ribbon bg-info text-white fw-bolder">
+            <small>SALE</small>
+          </div>
+        </div>
+        <div class="card-header bg-gradient-primary text-white py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bolder">{{p.productname}}</h5>
+            <span class="badge bg-white text-primary rounded-pill px-3 py-2 fw-bolder price-badge">₹{{p.price}}</span>
+          </div>
+        </div>
+        <div class="card-body" style="background-color: #f8fbff;">
+          <div class="mb-3">
+            <span class="badge bg-white text-primary me-2 shadow-sm fw-bold badge-3d">
+              <i class="fas fa-tint me-1"></i>Fresh
+            </span>
+            <span class="badge bg-white text-primary shadow-sm fw-bold badge-3d">
+              <i class="fas fa-seedling me-1"></i>Organic
+            </span>
+          </div>
+          
+          <p class="card-text fw-bold">{{p.productdesc}}</p>
+          
+          <hr class="hr-gradient my-3">
+          
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-avatar text-primary me-2">
+              <i class="fas fa-user-circle fa-2x"></i>
+            </div>
+            <div>
+              <h6 class="mb-0 fw-bold">{{p.username}}</h6>
+              <small class="text-muted fw-bold">
+                <i class="fas fa-envelope me-1"></i>{{p.email}}
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer border-0 p-3" style="background-color: white;">
+          <div class="d-grid gap-2">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to={{p.email}}" target="_blank" class="btn btn-gradient-primary btn-lg fw-bold neon-button">
+              <i class="fas fa-shopping-basket me-2 fa-bounce"></i>Purchase
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <!-- Empty State -->
+  {% if query|length == 0 %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5 empty-state-container">
+      <i class="fas fa-tint fa-5x text-primary opacity-50 mb-4 fa-beat-fade"></i>
+      <h3 class="text-primary fw-bold">No products available</h3>
+      <p class="text-muted fw-bold">Be the first to add agricultural products to the marketplace!</p>
+      <a href="/register" class="btn btn-gradient-primary mt-3 fw-bold neon-button">
+        <i class="fas fa-user-plus me-2"></i>Register as Farmer
+      </a>
+    </div>
+  </div>
+  {% endif %}
 </div>
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+  }
+  
+  /* Hero Section Styling */
+  .hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+    box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%23ffffff" fill-opacity="0.1" d="M0,192L48,208C96,224,192,256,288,261.3C384,267,480,245,576,218.7C672,192,768,160,864,165.3C960,171,1056,213,1152,208C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E') no-repeat bottom;
+    background-size: 100%;
+    z-index: 0;
+    opacity: 0.5;
+  }
+  
+  .hero-section * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Stats Card Enhanced */
+  .stats-card {
+    transform: translateY(-20px);
+    margin-bottom: 30px;
+    border-radius: 20px;
+  }
+  
+  .stat-number {
+    color: #000;
+    font-weight: 900 !important;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .stat-number::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 5px;
+    background: linear-gradient(135deg, #0d6efd, #0099ff);
+    border-radius: 2px;
+  }
+  
+  .stat-icon {
+    color: #0d6efd;
+    filter: drop-shadow(0 2px 5px rgba(13, 110, 253, 0.4));
+  }
+  
+  @media (max-width: 768px) {
+    .stats-card .border-end {
+      border-right: none !important;
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-number {
+      font-size: 3.5rem !important;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .stat-number {
+      font-size: 4.5rem !important;
+    }
+  }
+  
+  /* Card Styling */
+  .product-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  
+  .hover-effect:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 15px 30px rgba(135, 206, 250, 0.3) !important;
+    border-top: 4px solid #0d6efd;
+  }
+  
+  .hover-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+    transition: height 0.3s ease;
+    z-index: -1;
+    border-radius: 15px;
+  }
+  
+  .hover-effect:hover::before {
+    height: 5px;
+  }
+  
+  /* Ribbon Styling */
+  .ribbon-wrapper {
+    width: 85px;
+    height: 88px;
+    overflow: hidden;
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    z-index: 1;
+  }
+  
+  .ribbon {
+    font: bold 15px sans-serif;
+    color: #fff;
+    text-align: center;
+    transform: rotate(45deg);
+    position: relative;
+    padding: 5px 0;
+    left: -5px;
+    top: 15px;
+    width: 120px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Divider Styling */
+  .divider {
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Button Styling */
+  .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+  }
+  
+  .btn-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+    border: none;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-gradient-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+  }
+  
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+  }
+  
+  /* Badges */
+  .badge-3d {
+    transform: translateZ(5px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .badge-3d:hover {
+    transform: translateY(-2px) translateZ(10px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .price-badge {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+  }
+  
+  /* Glass Effect */
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-card {
+    background-color: rgba(248, 251, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  /* HR Gradient */
+  .hr-gradient {
+    height: 3px;
+    background: linear-gradient(to right, transparent, #0d6efd, transparent);
+    border: none;
+    border-radius: 50%;
+  }
+  
+  /* Text Colors */
+  .text-primary {
+    color: #0d6efd !important;
+  }
+  
+  .bg-primary {
+    background-color: #0d6efd !important;
+  }
+  
+  .card-text {
+    line-height: 1.6;
+  }
+  
+  .category-pill {
+    transition: all 0.3s ease;
+    border-width: 2px;
+  }
+  
+  .category-pill:hover, .category-pill.active {
+    background-color: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+  }
+  
+  /* Gradient Border */
+  .gradient-border {
+    position: relative;
+    border-radius: 15px;
+    padding: 5px;
+    background: linear-gradient(135deg, #0d6efd, #0099ff);
+  }
+  
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    padding: 2px;
+    background: linear-gradient(135deg, #0d6efd, #0099ff);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  
+  /* Pulse Button */
+  .pulse-button {
+    position: relative;
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+    }
+  }
+  
+  /* Neon Button Effect */
+  .neon-button {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .neon-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(30deg);
+    transition: transform 0.5s ease;
+  }
+  
+  .neon-button:hover::after {
+    transform: rotate(30deg) translate(10%, 10%);
+  }
+  
+  /* User Avatar */
+  .user-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(13, 110, 253, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .product-card:hover .user-avatar {
+    transform: scale(1.1);
+  }
+  
+  /* Empty State */
+  .empty-state-container {
+    border: 2px dashed rgba(13, 110, 253, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    background-color: rgba(13, 110, 253, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .empty-state-container:hover {
+    border-color: rgba(13, 110, 253, 0.6);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.1);
+  }
+  
+  /* Stat Items */
+  .stat-item {
+    padding: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .stat-item:hover {
+    transform: translateY(-5px);
+    cursor: pointer;
+  }
+  
+  .stat-item p {
+    color: #000 !important;
+    letter-spacing: 1px;
+    font-weight: 700 !important;
+  }
+</style>
+
+<script>
+  // Search functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('product-search');
+    if (searchInput) {
+      searchInput.addEventListener('keyup', function() {
+        const value = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.product-card');
+        
+        cards.forEach(card => {
+          const title = card.querySelector('.card-header h5').textContent.toLowerCase();
+          const desc = card.querySelector('.card-text').textContent.toLowerCase();
+          
+          if (title.includes(value) || desc.includes(value)) {
+            card.closest('.col-lg-4').style.display = '';
+          } else {
+            card.closest('.col-lg-4').style.display = 'none';
+          }
+        });
+      });
+    }
+    
+    // Category pills
+    const categoryPills = document.querySelectorAll('.category-pill');
+    categoryPills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        categoryPills.forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  });
+</script>
 {% endblock body %}

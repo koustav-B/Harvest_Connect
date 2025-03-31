@@ -3,53 +3,564 @@
 Triggers
 {% endblock title %}
 
-
-
 {% block body %}
- <h3 class="text-center"><span>Farmers Triggers Records</span> </h3>
+<div class="container-fluid py-5 bg-white">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h2 class="display-5 fw-bold text-primary mb-3">
+        <i class="fas fa-history me-2"></i>Farmer Activity Records
+      </h2>
+      <div class="d-flex justify-content-center">
+        <div class="divider bg-primary" style="height: 4px; width: 60px; margin-bottom: 20px;"></div>
+      </div>
+      <p class="lead text-muted mb-0">Track and monitor all farmer activities in the system</p>
+    </div>
+  </div>
   
-{% with messages=get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-
-<div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-    {{message}}
-
-
+  <!-- Flash Messages -->
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{category}} alert-dismissible fade show glass-effect shadow-sm" role="alert">
+        <i class="fas fa-info-circle me-2 fa-beat-fade"></i>{{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+  
+  <!-- Export Options Card -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div class="mb-3 mb-md-0">
+              <h5 class="mb-1 fw-bold text-primary">
+                <i class="fas fa-file-export me-2"></i>Export Options
+              </h5>
+              <p class="text-muted small mb-0">Choose a format to download the data</p>
+            </div>
+            <div class="export-buttons d-flex gap-3">
+              <button id="exportCSV" class="btn btn-primary export-btn">
+                <i class="fas fa-file-csv me-2"></i>Export as CSV
+              </button>
+              <button id="exportPDF" class="btn btn-danger export-btn">
+                <i class="fas fa-file-pdf me-2"></i>Export as PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Records Card -->
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-gradient-primary text-white p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">
+              <i class="fas fa-clipboard-list me-2"></i>Activity Log
+            </h5>
+            <button class="btn btn-light btn-sm" id="refreshBtn">
+              <i class="fas fa-sync-alt me-1"></i>Refresh
+            </button>
+          </div>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0" id="recordsTable">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" class="border-0 ps-4">
+                    <div class="d-flex align-items-center">
+                      <span>FARMER ID</span>
+                      <i class="fas fa-sort ms-2 text-muted"></i>
+                    </div>
+                  </th>
+                  <th scope="col" class="border-0">
+                    <div class="d-flex align-items-center">
+                      <span>ACTION</span>
+                      <i class="fas fa-sort ms-2 text-muted"></i>
+                    </div>
+                  </th>
+                  <th scope="col" class="border-0 pe-4">
+                    <div class="d-flex align-items-center">
+                      <span>TIMESTAMP</span>
+                      <i class="fas fa-sort ms-2 text-muted"></i>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                {% for post in query %}
+                <tr class="record-row">
+                  <td class="ps-4 farmer-id">
+                    <span class="badge bg-primary">{{post.fid}}</span>
+                  </td>
+                  <td class="action-cell">
+                    {% if 'added' in post.action.lower() %}
+                    <span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i>{{post.action}}</span>
+                    {% elif 'deleted' in post.action.lower() %}
+                    <span class="badge bg-danger"><i class="fas fa-trash-alt me-1"></i>{{post.action}}</span>
+                    {% elif 'updated' in post.action.lower() %}
+                    <span class="badge bg-warning text-dark"><i class="fas fa-edit me-1"></i>{{post.action}}</span>
+                    {% else %}
+                    <span class="badge bg-info"><i class="fas fa-info-circle me-1"></i>{{post.action}}</span>
+                    {% endif %}
+                  </td>
+                  <td class="pe-4 timestamp-cell">
+                    <i class="far fa-clock me-1 text-muted"></i>
+                    <span>{{post.timestamp}}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+                
+                {% if query|length == 0 %}
+                <tr id="noRecordsRow">
+                  <td colspan="3" class="text-center py-5">
+                    <i class="fas fa-database fa-3x text-muted mb-3 d-block"></i>
+                    <h5 class="text-muted">No records found</h5>
+                    <p class="text-muted">Activity logs will appear here once farmers start using the system</p>
+                  </td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="card-footer bg-light p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <small class="text-muted">Showing <span id="showing-records" class="fw-bold">5</span> of <span class="fw-bold">{{ query|length }}</span> records</small>
+            </div>
+            <div>
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0" id="pagination">
+                  <li class="page-item disabled" id="prevPage">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  <!-- Pagination items will be generated by JavaScript -->
+                  <li class="page-item next" id="nextPage">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
-<br>
 
-<div class="container mt-4">
-<table class="table">
-  <thead class="thead-light">
-    <tr>
-   
-      <th scope="col">FARMER ID</th>
-      <th scope="col">ACTION</th>
-      <th scope="col">TIMESTAMP</th>
+<!-- Export Success Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="exportToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-success text-white">
+      <i class="fas fa-check-circle me-2"></i>
+      <strong class="me-auto">Export Successful</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Your file has been exported successfully.
+    </div>
+  </div>
+</div>
 
+<style>
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0099ff 100%);
+  }
+  
+  .divider {
+    display: inline-block;
+    border-radius: 10px;
+  }
+  
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .table th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .table th i.fa-sort {
+    opacity: 0.5;
+    cursor: pointer;
+  }
+  
+  .table th i.fa-sort:hover {
+    opacity: 1;
+  }
+  
+  .record-row {
+    transition: all 0.2s ease;
+  }
+  
+  .record-row:hover {
+    background-color: rgba(13, 110, 253, 0.05) !important;
+    cursor: pointer;
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+    font-size: 85%;
+  }
+  
+  @media (max-width: 768px) {
+    .table th, .table td {
+      font-size: 0.875rem;
+    }
+  }
+  
+  .export-btn {
+    font-weight: 600;
+    min-width: 150px;
+    transition: all 0.3s ease;
+    padding: 10px 16px;
+    border-radius: 10px;
+  }
+  
+  .export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .export-btn i {
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .export-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+    
+    .export-btn {
+      width: 100%;
+      margin-right: 0 !important;
+    }
+  }
+</style>
 
-    </tr>
-  </thead>
-  <tbody>
-  {% for post in query %}
-    <tr>
+<!-- Include jsPDF library for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Pagination variables
+    const recordsPerPage = 5;
+    let currentPage = 1;
+    const records = [...document.querySelectorAll('.record-row')];
+    const totalRecords = records.length;
+    const totalPages = Math.ceil(totalRecords / recordsPerPage);
+    
+    // Pagination elements
+    const pagination = document.getElementById('pagination');
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
+    const showingText = document.getElementById('showing-records');
+    const tableBody = document.getElementById('tableBody');
+    const noRecordsRow = document.getElementById('noRecordsRow');
+
+    // Initialize pagination if we have records
+    if (totalRecords > 0) {
+      initPagination();
+      showPage(1);
+    }
+
+    // Generate pagination links
+    function initPagination() {
+      // Clear existing page links
+      const pageLinks = pagination.querySelectorAll('.page-item:not(#prevPage):not(#nextPage)');
+      pageLinks.forEach(link => link.remove());
       
-      <td>{{post.fid}}</td>
-      <td>{{post.action}}</td>
-      <td>{{post.timestamp}}</td>
-     
-  
-    </tr>
-{% endfor %}
-  
-  </tbody>
-</table>
-</div>
-
-
-
+      // Create page links
+      for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement('li');
+        pageItem.className = `page-item ${i === 1 ? 'active' : ''}`;
+        pageItem.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+        
+        // Insert before the Next button
+        pagination.insertBefore(pageItem, nextPageBtn);
+        
+        // Add event listener
+        pageItem.querySelector('a').addEventListener('click', function(e) {
+          e.preventDefault();
+          const pageNum = parseInt(this.getAttribute('data-page'));
+          showPage(pageNum);
+        });
+      }
+      
+      // Set up Next/Prev buttons
+      prevPageBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+          showPage(currentPage - 1);
+        }
+      });
+      
+      nextPageBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentPage < totalPages) {
+          showPage(currentPage + 1);
+        }
+      });
+      
+      // Update button states
+      updatePaginationButtons();
+    }
+    
+    // Show specific page
+    function showPage(pageNum) {
+      currentPage = pageNum;
+      
+      // Calculate start and end index
+      const startIndex = (pageNum - 1) * recordsPerPage;
+      const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+      
+      // Hide all records first
+      records.forEach(record => record.style.display = 'none');
+      
+      // Show only records for current page
+      for (let i = startIndex; i < endIndex; i++) {
+        records[i].style.display = '';
+      }
+      
+      // Update pagination UI
+      updatePaginationButtons();
+      
+      // Update showing text
+      showingText.textContent = Math.min(recordsPerPage, endIndex - startIndex);
+      
+      // Highlight active page
+      const pageLinks = pagination.querySelectorAll('.page-item:not(#prevPage):not(#nextPage)');
+      pageLinks.forEach((link, index) => {
+        if (index + 1 === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    
+    // Update Next/Prev button states
+    function updatePaginationButtons() {
+      if (currentPage === 1) {
+        prevPageBtn.classList.add('disabled');
+      } else {
+        prevPageBtn.classList.remove('disabled');
+      }
+      
+      if (currentPage === totalPages) {
+        nextPageBtn.classList.add('disabled');
+      } else {
+        nextPageBtn.classList.remove('disabled');
+      }
+    }
+    
+    // Simple animation for refresh button
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        icon.classList.add('fa-spin');
+        
+        // Simulate refresh action (would be replaced with actual reload)
+        setTimeout(function() {
+          icon.classList.remove('fa-spin');
+          location.reload();
+        }, 1000);
+      });
+    }
+    
+    // Table row click effect
+    records.forEach(row => {
+      row.addEventListener('click', function() {
+        this.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
+        setTimeout(() => {
+          this.style.backgroundColor = '';
+        }, 300);
+      });
+    });
+    
+    // Export to CSV functionality
+    const exportCSV = document.getElementById('exportCSV');
+    if (exportCSV) {
+      exportCSV.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Add loading indicator
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+        this.disabled = true;
+        
+        setTimeout(() => {
+          // Get table data - export ALL records, not just current page
+          const table = document.getElementById('recordsTable');
+          const rows = table.querySelectorAll('tbody tr');
+          
+          // Check if there are records
+          if (rows.length === 0 || (rows.length === 1 && rows[0].querySelector('td[colspan]'))) {
+            alert('No data to export');
+            // Reset button
+            this.innerHTML = '<i class="fas fa-file-csv me-2"></i>Export as CSV';
+            this.disabled = false;
+            return;
+          }
+          
+          // Create CSV content
+          let csvContent = 'Farmer ID,Action,Timestamp\n';
+          
+          rows.forEach(row => {
+            // Skip the "no records" row if it exists
+            if (row.querySelector('td[colspan]')) return;
+            
+            const farmerId = row.querySelector('.farmer-id span').textContent.trim();
+            const action = row.querySelector('.action-cell span').textContent.trim();
+            const timestamp = row.querySelector('.timestamp-cell span').textContent.trim();
+            
+            // Create CSV row and escape commas
+            csvContent += `${farmerId},${action.replace(/,/g, ';')},${timestamp}\n`;
+          });
+          
+          // Create and download the CSV file
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'farmer_activity_records.csv');
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Reset button
+          this.innerHTML = '<i class="fas fa-file-csv me-2"></i>Export as CSV';
+          this.disabled = false;
+          
+          // Show success toast
+          showExportToast('CSV');
+        }, 800);
+      });
+    }
+    
+    // Export to PDF functionality
+    const exportPDF = document.getElementById('exportPDF');
+    if (exportPDF && typeof window.jspdf !== 'undefined') {
+      exportPDF.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Add loading indicator
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+        this.disabled = true;
+        
+        setTimeout(() => {
+          // Get table data
+          const table = document.getElementById('recordsTable');
+          const rows = table.querySelectorAll('tbody tr');
+          
+          // Check if there are records
+          if (rows.length === 0 || (rows.length === 1 && rows[0].querySelector('td[colspan]'))) {
+            alert('No data to export');
+            // Reset button
+            this.innerHTML = '<i class="fas fa-file-pdf me-2"></i>PDF';
+            this.disabled = false;
+            return;
+          }
+          
+          // Create PDF
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+          
+          // Add title
+          doc.setFontSize(18);
+          doc.setTextColor(13, 110, 253); // Primary blue color
+          doc.text('Farmer Activity Records', 14, 22);
+          
+          // Add date
+          doc.setFontSize(11);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Generated: ' + new Date().toLocaleString(), 14, 30);
+          
+          // Create table data
+          const tableData = [];
+          rows.forEach(row => {
+            // Skip the "no records" row if it exists
+            if (row.querySelector('td[colspan]')) return;
+            
+            const farmerId = row.querySelector('.farmer-id span').textContent.trim();
+            const action = row.querySelector('.action-cell span').textContent.trim();
+            const timestamp = row.querySelector('.timestamp-cell span').textContent.trim();
+            
+            tableData.push([farmerId, action, timestamp]);
+          });
+          
+          // Create table with autotable plugin
+          doc.autoTable({
+            startY: 40,
+            head: [['Farmer ID', 'Action', 'Timestamp']],
+            body: tableData,
+            theme: 'striped',
+            headStyles: {
+              fillColor: [13, 110, 253],
+              textColor: 255,
+              fontStyle: 'bold'
+            },
+            styles: {
+              lineColor: [238, 238, 238],
+              lineWidth: 0.1,
+            },
+            alternateRowStyles: {
+              fillColor: [245, 245, 245]
+            }
+          });
+          
+          // Save the PDF
+          doc.save('farmer_activity_records.pdf');
+          
+          // Reset button
+          this.innerHTML = '<i class="fas fa-file-pdf me-2"></i>PDF';
+          this.disabled = false;
+          
+          // Show success toast
+          showExportToast('PDF');
+        }, 800);
+      });
+    }
+    
+    // Success toast
+    function showExportToast(format) {
+      const toastEl = document.getElementById('exportToast');
+      const toastBody = toastEl.querySelector('.toast-body');
+      toastBody.textContent = `Your file has been exported successfully as ${format}.`;
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+  });
+</script>
 {% endblock body %}
